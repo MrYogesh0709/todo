@@ -1,7 +1,7 @@
 
 # Todo-App(react+vite)
 
-React+vite Todo application (curd) create-update-read-delete task with use local stoarage
+React+vite Todo application (CRUD) create-update-read-delete task with use local stoarage
 
 
 ## Demo
@@ -21,8 +21,15 @@ Install my-project with npm
     
 ## Features
 
-
 - Responsive design
-- Crud operaion
+- CRUD operaion
 - Local Storage
 
+
+## 🚀 About Me
+I'm a full stack developer...
+
+
+## Feedback
+
+If you have any feedback, please reach out to us at yogeshvanzara98@gmail.com
