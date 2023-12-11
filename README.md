@@ -16,6 +16,7 @@ Install my-project with npm
 ```bash
   npm install 
   cd todo
+  npm run dev
 ```
     
 ## Features
