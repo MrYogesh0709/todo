@@ -1,7 +1,7 @@
 import { Plus, Pen, Trash2 } from "lucide-react";
 import { useState } from "react";
 import useGetData from "./hook/useGetData";
-
+import github from "./assets/github.svg";
 function App() {
   const [taskData, setTaskData] = useGetData();
   const [editId, setEditId] = useState(0);
@@ -139,6 +139,13 @@ function App() {
           Please Add Your first task
         </div>
       )}
+      <a
+        href="https://github.com/MrYogesh0709/todo"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img src={github} alt="github" className="github" />
+      </a>
     </div>
   );
 }

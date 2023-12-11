@@ -86,3 +86,13 @@ input[type="checkbox"] {
   height: 50vh;
   font-size: var(--font-large);
 }
+.github {
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+.github:hover {
+  scale: 1.1;
+  transition: scale 0.3s ease-in-out;
+}
