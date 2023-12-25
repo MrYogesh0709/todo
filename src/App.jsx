@@ -1,5 +1,5 @@
 import { Plus, Pen, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import useGetData from "./hook/useGetData";
 import github from "./assets/github.svg";
 function App() {
@@ -7,6 +7,7 @@ function App() {
   const [editId, setEditId] = useState(0);
   const [edit, setEdit] = useState(false);
   const [text, setText] = useState("");
+  const inputRef = useRef(null);
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -14,21 +15,19 @@ function App() {
       window.alert("Please Add Your Task");
       return;
     }
-    setTaskData((prevTask) => {
-      return [
-        ...prevTask,
-        { id: prevTask?.at(-1)?.id + 1 || 1, task: text, completed: false },
-      ];
-    });
+    setTaskData([
+      ...taskData,
+      { id: taskData.at(-1)?.id + 1 || 1, task: text, completed: false },
+    ]);
     setText("");
   };
 
   const removeTask = (id) => {
     if (window.confirm("Do you really want to remove task?")) {
-      setTaskData((prevTask) => {
-        return [...prevTask.filter((task) => task.id !== id)];
-      });
+      setTaskData(taskData.filter((task) => task.id !== id));
     }
+    setText("");
+    inputRef.current.focus();
   };
 
   const setEditTodo = (id) => {
@@ -36,17 +35,20 @@ function App() {
     setText(todo.task);
     setEdit(true);
     setEditId(id);
+    inputRef.current.focus();
   };
 
   const editTodo = (e) => {
     e.preventDefault();
-    setTaskData((prevTask) => {
-      return prevTask.map((item) => {
-        return item.id === editId
-          ? { id: editId, task: text, completed: false }
-          : item;
-      });
-    });
+    if (!text) {
+      window.alert(edit && "Text Length too short");
+      return;
+    }
+    setTaskData(
+      taskData.map((task) =>
+        task.id === editId ? { id: editId, task: text, completed: false } : task
+      )
+    );
     setText("");
     setEditId(0);
     setEdit(false);
@@ -54,19 +56,24 @@ function App() {
 
   const completeTask = (id) => {
     if (window.confirm("Are you Sure that task is complete?")) {
-      setTaskData((prevTask) => {
-        return prevTask.map((item) => {
-          return item.id === id ? { ...item, completed: true } : item;
-        });
-      });
+      setTaskData(
+        taskData.map((item) =>
+          item.id === id ? { ...item, completed: true } : item
+        )
+      );
     }
   };
 
   return (
     <div className="app">
-      <h1 className="d-flex mt-2 flex-center items-center">TODO LIST</h1>
-      <div className="line" style={{ marginTop: "1rem" }}></div>
+      <header>
+        <h1 className="d-flex mt-2 flex-center items-center">TODO LIST</h1>
+      </header>
+      <hr className="line" style={{ marginTop: "1rem" }} />
       <form className="d-flex items-center mt-2 flex-center gap-2">
+        <label htmlFor="todo" className="sr-only">
+          Add a new task:
+        </label>
         <input
           type="text"
           name="todo_text"
@@ -75,6 +82,8 @@ function App() {
           value={text}
           required
           onChange={(e) => setText(e.target.value)}
+          autoFocus
+          ref={inputRef}
         />
         {edit ? (
           <button onClick={(e) => editTodo(e)}>
@@ -97,12 +106,19 @@ function App() {
                   className="input-checkbox"
                   checked={todo.completed}
                   onChange={() => completeTask(todo.id)}
+                  aria-label="complete task"
                 />
                 <p className="todo">{todo.task}</p>
-                <button onClick={() => setEditTodo(todo.id)}>
+                <button
+                  onClick={() => setEditTodo(todo.id)}
+                  aria-label="Edit task"
+                >
                   <Pen size="25px" color="skyblue" />
                 </button>
-                <button onClick={() => removeTask(todo.id)}>
+                <button
+                  onClick={() => removeTask(todo.id)}
+                  aria-label="Delete task"
+                >
                   <Trash2 size="25px" color="red" />
                 </button>
               </>
@@ -114,6 +130,7 @@ function App() {
                   className="input-checkbox"
                   checked={todo.completed}
                   readOnly
+                  aria-label="completed task"
                 />
                 <div className="todo">
                   <strike>{todo.task}</strike>
@@ -121,13 +138,16 @@ function App() {
                 <button
                   onClick={() =>
                     window.alert(
-                      "Sorry, task is completed you can not chang it."
+                      "Sorry, task is completed you can not change it."
                     )
                   }
                 >
                   <Pen size="25px" color="skyblue" />
                 </button>
-                <button onClick={() => removeTask(todo.id)}>
+                <button
+                  onClick={() => removeTask(todo.id)}
+                  aria-label="Delete task"
+                >
                   <Trash2 size="25px" color="red" />
                 </button>
               </>
@@ -143,6 +163,7 @@ function App() {
         href="https://github.com/MrYogesh0709/todo"
         target="_blank"
         rel="noreferrer"
+        aria-label="github repository "
       >
         <img src={github} alt="github" className="github" />
       </a>
